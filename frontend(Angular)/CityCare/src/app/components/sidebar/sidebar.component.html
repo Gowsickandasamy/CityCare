@@ -1,0 +1,61 @@
+<div *ngIf="isLoggedIn$ | async">
+    <mat-sidenav-container>
+      <mat-sidenav class="mat-elevation-z8" opened mode="side">
+        <div class="nav-menu">
+          <mat-list-item>
+            <a class="menu-icons" routerLink="/home" routerLinkActive="active">
+              <mat-icon>house</mat-icon>
+              <span>Home</span>
+            </a>
+          </mat-list-item>
+          <mat-list-item>
+            <a class="menu-icons" routerLink="/profile" routerLinkActive="active">
+              <mat-icon>person</mat-icon>
+              <span>Profile</span>
+            </a>
+          </mat-list-item>
+          <mat-list-item>
+            <a class="menu-icons" routerLink="/addofficer" routerLinkActive="active">
+              <mat-icon>supervisor_account</mat-icon>
+              <span>Add Officer</span>
+            </a>
+          </mat-list-item>
+  
+          <mat-divider></mat-divider>
+  
+          <mat-list-item>
+            <a class="menu-icons">
+              <mat-icon>help</mat-icon>
+              <span>Help</span>
+            </a>
+          </mat-list-item>
+        </div>
+  
+        <div class="bottom-nav">
+          <mat-divider></mat-divider>
+          <mat-list-item>
+            <a class="menu-icons">
+              <mat-icon>settings</mat-icon>
+              <span>Settings</span>
+            </a>
+          </mat-list-item>
+  
+          <mat-divider></mat-divider>
+  
+          <mat-list-item>
+            <a class="menu-icons" (click)="onLogout()">
+              <mat-icon>logout</mat-icon>
+              <span>Logout</span>
+            </a>
+          </mat-list-item>
+        </div>
+      </mat-sidenav>
+  
+      <mat-sidenav-content>
+        <div class="content-wrapper">
+          <router-outlet></router-outlet>
+          <app-footer></app-footer>
+        </div>
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+  </div>

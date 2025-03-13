@@ -1,0 +1,69 @@
+.home-container{
+    position: relative;
+  }
+  
+  .banner, .about-section, .features{
+    min-height: 100vh;
+    top:50%;
+    margin-bottom: 50px; /* Add margin to help with intersection detection */
+  }
+  
+  .banner{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding-left: 10%;
+  }
+  .about-section{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding-left: 10%;
+  }
+  h1{
+    font-size: 100px;
+  }
+  
+  .about-title{
+    font-size: 80px;
+  }
+  .motto{
+    font-style: italic;
+  }
+  
+  .features{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 50px;
+  }
+  
+  .feature-card{
+    height:200px;
+    width:200px;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 1px 2px 3px 4px rgba(12,12,12,0.2);
+    transition: all 0.5s ease-in-out;
+  }
+  
+  .feature-card:hover{
+    transform: scale(1.1);
+  }
+  .fade-in-section {
+    opacity: 0;
+    transform: translateY(30px);
+    visibility: hidden;
+    transition: opacity 1.2s ease-out, transform 0.6s ease-out, visibility 1.2s ease-out;
+    will-change: opacity, transform, visibility;
+  }
+  
+  .fade-in-section.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+  }
+  
+  
