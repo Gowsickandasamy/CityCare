@@ -4,6 +4,8 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { CommonModule } from '@angular/common';
 import { RegisterComponent } from '../register/register.component';
+import { ToastrService } from 'ngx-toastr';
+import { timeout } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -18,7 +20,8 @@ export class LoginComponent implements OnInit{
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private toastr:ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -32,10 +35,12 @@ export class LoginComponent implements OnInit{
     if(this.loginForm.valid){
       this.authService.login(this.loginForm.value).subscribe((res)=>{
         this.authService.saveTokens(res.access,res.refresh)
+        this.toastr.success("Login Successfull",'',{timeOut:2000})
         this.router.navigate(['/home'])
       },
     (error)=>{
       this.errorMessage=error.error.message || "Invalid Login Credentials"
+      this.toastr.error(this.errorMessage);
     })
     }
   }
