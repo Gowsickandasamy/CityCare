@@ -1,0 +1,154 @@
+.addOfficer-container {
+  position: relative;
+}
+
+.banner,
+.overview-section,
+.features,
+.guide-section {
+  min-height: 100vh;
+  top: 50%;
+  margin-bottom: 50px; /* Add margin to help with intersection detection */
+}
+
+.banner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding-left: 10%;
+}
+.overview-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding-left: 10%;
+}
+h1 {
+  font-size: 100px;
+}
+
+.overview-title {
+  font-size: 80px;
+}
+
+.overview-text {
+  font-style: italic;
+  font-size: large;
+}
+.description {
+  font-style: italic;
+}
+
+.guide-title {
+  font-size: 80px;
+}
+
+.guide-section {
+  padding: 20px;
+  transition: all 0.5s ease-in-out;
+  padding-left: 10%;
+}
+
+.guide-step {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.guide-list li {
+  font-size: 20px; /* Increase this value as needed */
+  margin-bottom: 10px; /* Optional: Adds spacing between the steps */
+}
+
+.guide-step.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.features {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 80px;
+}
+
+.feature-card {
+  height: 250px;
+  width: 300px;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 1px 2px 3px 4px rgba(12, 12, 12, 0.2);
+  transition: all 0.5s ease-in-out;
+}
+
+.feature-card:hover {
+  transform: scale(1.1);
+}
+.fade-in-section {
+  opacity: 0;
+  transform: translateY(30px);
+  visibility: hidden;
+  transition: opacity 1.2s ease-out, transform 0.6s ease-out,
+    visibility 1.2s ease-out;
+  will-change: opacity, transform, visibility;
+}
+
+.fade-in-section.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+}
+
+
+/* Add this to your home.component.css or a separate CSS file */
+@keyframes slideDown {
+  0% { transform: translateY(-100%); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  width: 500px;
+  animation: slideDown 0.5s ease-out;
+}
+
+.modal-header {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+.modal-form input, .modal-form select, .modal-form button {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.modal-form button {
+  background-color: #000000;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.modal-form button:hover {
+  background-color: #4ec7f3;
+}

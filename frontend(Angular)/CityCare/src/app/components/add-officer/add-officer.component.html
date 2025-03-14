@@ -1,0 +1,87 @@
+<div class="addOfficer-container" @fadeInOut>
+  <div class="banner fade-in-section" #fadeInElement>
+    <h1 class="title">Add New Officer</h1>
+    <h2 class="description">
+      Manage officers effectively by adding their details here.
+    </h2>
+    <app-button buttonText="Add New Officer" (buttonClick)="openModal()"></app-button>
+  </div>
+
+  <div *ngIf="showModal" class="modal-overlay" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">Add New Officer</div>
+      <form [formGroup]="OfficerForm" class="modal-form" (ngSubmit)="submitOfficerForm()">
+        <input
+          type="text"
+          placeholder="Officer Name"
+          formControlName="username"
+          name="username"
+          required
+        />
+        <input
+          type="email"
+          placeholder="Officer Email"
+          formControlName="email"
+          name="email"
+          required
+        />
+        <input
+          type="text"
+          placeholder="Officer phone_number"
+          formControlName="phone_number"
+          name="phone_number"
+          required
+        />
+        <input
+          type="text"
+          placeholder="Area of Control"
+          formControlName="area_of_control"
+          name="area"
+          required
+        />
+        <button type="submit">Create Officer</button>
+      </form>
+    </div>
+  </div>
+  <div class="overview-section fade-in-section" #fadeInElement>
+    <h2 class="overview-title">Overview</h2>
+    <p class="overview-text">
+      An Officer is responsible for handling specific areas and reporting their
+      activities to the Admin. You can create a new officer profile by providing
+      their details and assigning them their respective area of control.
+    </p>
+  </div>
+
+  <div class="guide-section fade-in-section" #fadeInElement>
+    <h2 class="guide-title">Steps for Adding an Officer</h2>
+    <ol class="guide-list">
+      <li>Enter Officer Details</li>
+      <li>Assign Area of Control</li>
+      <li>Submit to Create Officer</li>
+    </ol>
+  </div>
+
+  <div class="features fade-in-section" #fadeInElement>
+    <div class="feature-card">
+      <h3>Efficient management of different areas</h3>
+      <p>
+        Assign officers to specific areas for improved governance and enhanced
+        responsibility handling.
+      </p>
+    </div>
+    <div class="feature-card fade-in-scroll">
+      <h3>Streamlined communication with Admins.</h3>
+      <p>
+        Facilitate direct reporting and communication between officers and
+        admins for better coordination.
+      </p>
+    </div>
+    <div class="feature-card fade-in-scroll">
+      <h3>Better monitoring and reporting of activities.</h3>
+      <p>
+        Keep track of officer activities and performance to ensure efficient
+        management and accountability.
+      </p>
+    </div>
+  </div>
+</div>
