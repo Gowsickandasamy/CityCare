@@ -14,10 +14,11 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { AddOfficerService } from '../../services/add-officer.service';
+import { OfficerModalComponent } from '../../components-library/officer-modal/officer-modal.component';
 
 @Component({
   selector: 'app-add-officer',
-  imports: [CommonModule, ReactiveFormsModule, FormsModule, ButtonComponent],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, ButtonComponent, OfficerModalComponent],
   templateUrl: './add-officer.component.html',
   styleUrl: './add-officer.component.css',
   animations: [
@@ -87,5 +88,8 @@ export class AddOfficerComponent implements OnInit{
       this.showModal = false;
     })
    }
+   else {
+    console.log('Form is invalid:', this.OfficerForm.errors); 
+  }
   }
 }

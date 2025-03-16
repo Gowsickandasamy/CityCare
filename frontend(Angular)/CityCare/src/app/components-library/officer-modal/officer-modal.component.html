@@ -1,0 +1,10 @@
+<div *ngIf="showModal" class="modal-overlay" (click)="close()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">{{ header }}</div>
+      <form [formGroup]="formGroup" class="modal-form" (ngSubmit)="submitForm()">
+        <ng-content></ng-content>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  </div>
+  
