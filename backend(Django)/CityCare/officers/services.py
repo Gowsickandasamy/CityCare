@@ -20,3 +20,13 @@ def create_officer(username, email, phone_number, area_of_control, created_by):
         )
         
         return officer
+    
+def get_all_officer(admin_id):
+    with transaction.atomic():
+        officers = Officer.objects.filter(reports_to = admin_id)
+        return officers
+    
+def delete_officer(officer_id):
+    with transaction.atomic():
+        officer = User.objects.get(id=officer_id)
+        officer.delete()
