@@ -4,10 +4,11 @@
     <h2 class="description">
       Manage officers effectively by adding their details here.
     </h2>
-    <app-button
-      buttonText="Add New Officer"
-      (buttonClick)="openModal()"
-    ></app-button>
+    <div class="button-group">
+      <app-button buttonText="Add New Officer" (buttonClick)="openModal()"></app-button>
+      <app-button buttonText="Officer List" routerLink="/officersList"></app-button>
+    </div>
+    
   </div>
 
   <app-officer-modal

@@ -41,6 +41,10 @@ h1 {
   font-style: italic;
 }
 
+.button-group{
+  display: flex;
+  gap:100px;
+}
 .guide-title {
   font-size: 80px;
 }

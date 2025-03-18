@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Officer } from '../models/officer';
 
 @Injectable({
   providedIn: 'root'
@@ -16,4 +17,7 @@ export class AddOfficerService {
     return this.http.post(`${this.apiUrl}/create/`, { username, email, phone_number, area_of_control })
   }
 
+  getOfficers():Observable<Officer[]>{
+    return this.http.get<Officer[]>(`${this.apiUrl}/getOfficer/`)
+  }
 }
