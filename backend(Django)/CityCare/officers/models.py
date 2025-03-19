@@ -21,3 +21,14 @@ class OfficerRating(models.Model):
 
     def __str__(self):
         return f"Rating for {self.officer.user.username} - {self.rating}"
+    
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)  # Save the rating first
+        
+        # Recalculate the average rating for the officer
+        ratings = OfficerRating.objects.filter(officer=self.officer)
+        average = sum(r.rating for r in ratings) / ratings.count() if ratings.exists() else 0.0
+        
+        # Update the officer's average rating
+        self.officer.average_rating = average
+        self.officer.save()
