@@ -28,4 +28,18 @@ export class ListOfficerComponent implements OnInit{
       this.toastr.error("Something went wrong");
     })
   }
+
+  deleteOfficer(id: number) {
+    this.officerService.confirmBox(id).subscribe({
+      next: (isDeleted) => {
+        if (isDeleted) {
+          // Refresh the list or do any other action
+          this.getOfficers();
+        }
+      },
+      error: (error) => console.error('Deletion failed', error)
+    });
+  }
+  
+
 }
