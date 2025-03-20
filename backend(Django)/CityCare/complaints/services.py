@@ -14,7 +14,6 @@ def create_complaint(user, title, description, area_name, location_link):
         
         print(f"Creating complaint for officer: {officer}, User: {user}")
 
-        # Create the complaint
         complaint = Complaint.objects.create(
             user=user,
             officer=officer.user,
