@@ -5,7 +5,7 @@ from officers.models import Officer
 
 def create_officer(username, email, phone_number, area_of_control, created_by):
     with transaction.atomic():
-        user = User.objects.create(
+        user = User.objects.create_user(
             username = username,
             email = email,
             phone_number = phone_number,

@@ -11,6 +11,7 @@ class Complaint(models.Model):
     
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_complaints')
     officer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='officer_complaints')
+    admin = models.ForeignKey(User, on_delete=models.CASCADE, related_name='admin_complaints', null=True, blank=True)
     title = models.CharField(max_length=255)
     description = models.TextField()
     area_name = models.CharField(max_length=255)
