@@ -2,14 +2,16 @@
   <div class="title">
     <h1>Complaints</h1>
     <div class="title-right">
+      <!-- Dropdown for Filtering Complaints -->
       <div class="dropdown">
         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-          Filter Complaints
+          {{ selectedStatus }}
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-          <li><a class="dropdown-item" href="#">Pending</a></li>
-          <li><a class="dropdown-item" href="#">Work on progress</a></li>
-          <li><a class="dropdown-item" href="#">Completed</a></li>
+          <li><a class="dropdown-item" (click)="setStatus('All Complaints')">All Complaints</a></li>
+          <li><a class="dropdown-item" (click)="setStatus('PENDING')">Pending</a></li>
+          <li><a class="dropdown-item" (click)="setStatus('WORK_ON_PROGRESS')">Work on progress</a></li>
+          <li><a class="dropdown-item" (click)="setStatus('RESOLVED')">Resolved</a></li>
         </ul>
       </div>
 
@@ -17,21 +19,28 @@
         <button class="btn-search">
           <mat-icon class="search-icon">search</mat-icon>
         </button>
-        <input type="text" class="input-search" placeholder="Type to Search...">
+        <input type="text" class="input-search" placeholder="Type to Search..." [(ngModel)]="searchText">
       </div>
     </div>
   </div>
   <hr>
+
   <div class="complaints-container">
-    <div *ngIf="complaints.length === 0">
-      <p>No complaints found for your role.</p>
+    <div *ngIf="filteredComplaints.length === 0">
+      <p>No complaints found for "{{ selectedStatus }}" status with officer name "{{ searchText }}".</p>
     </div>
     <div class="complaints">
-      <div *ngFor="let complaint of complaints" class="complaint-card">
+      <div *ngFor="let complaint of filteredComplaints" class="complaint-card">
         <h3>{{ complaint.title }}</h3>
         <p><strong>Description:</strong> {{ complaint.description }}</p>
         <p><strong>Area Name:</strong> {{ complaint.area_name }}</p>
         <p><strong>Officer Name:</strong> {{ complaint.officer }}</p>
+        <p><strong>Status:</strong> <span [ngClass]="{
+          'text-warning': complaint.status === 'PENDING',
+          'text-primary': complaint.status === 'WORK_ON_PROGRESS',
+          'text-success': complaint.status === 'RESOLVED'
+        }">{{ complaint.status }}</span></p>
+
         <div class="complaint-footer">
           <a [href]="complaint.location_link" target="_blank" class="location-icon">
             <mat-icon color="primary">place</mat-icon>
