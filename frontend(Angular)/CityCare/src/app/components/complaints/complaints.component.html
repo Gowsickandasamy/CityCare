@@ -1,1 +1,43 @@
-<p>complaints works!</p>
+<div class="complaints-container">
+  <div class="title">
+    <h1>Complaints</h1>
+    <div class="title-right">
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+          Filter Complaints
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+          <li><a class="dropdown-item" href="#">Pending</a></li>
+          <li><a class="dropdown-item" href="#">Work on progress</a></li>
+          <li><a class="dropdown-item" href="#">Completed</a></li>
+        </ul>
+      </div>
+
+      <div class="search-box">
+        <button class="btn-search">
+          <mat-icon class="search-icon">search</mat-icon>
+        </button>
+        <input type="text" class="input-search" placeholder="Type to Search...">
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="complaints-container">
+    <div *ngIf="complaints.length === 0">
+      <p>No complaints found for your role.</p>
+    </div>
+    <div class="complaints">
+      <div *ngFor="let complaint of complaints" class="complaint-card">
+        <h3>{{ complaint.title }}</h3>
+        <p><strong>Description:</strong> {{ complaint.description }}</p>
+        <p><strong>Area Name:</strong> {{ complaint.area_name }}</p>
+        <p><strong>Officer Name:</strong> {{ complaint.officer }}</p>
+        <div class="complaint-footer">
+          <a [href]="complaint.location_link" target="_blank" class="location-icon">
+            <mat-icon color="primary">place</mat-icon>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

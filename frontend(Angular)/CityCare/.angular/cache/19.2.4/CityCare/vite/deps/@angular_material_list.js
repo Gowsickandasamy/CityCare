@@ -1,7 +1,7 @@
+import "./chunk-SZS4RJEH.js";
 import {
   NG_VALUE_ACCESSOR
 } from "./chunk-HNLZMC5L.js";
-import "./chunk-SZS4RJEH.js";
 import "./chunk-OCRMSJNA.js";
 import "./chunk-A7YBOD4W.js";
 import "./chunk-65RJ5ZZ2.js";
@@ -28,12 +28,12 @@ import {
   isFakeTouchstartFromScreenReader,
   normalizePassiveListenerOptions
 } from "./chunk-CSRO5JI2.js";
-import "./chunk-M3HR6BUY.js";
 import {
   Platform,
   coerceElement,
   coerceNumberProperty
 } from "./chunk-IZB2KLNJ.js";
+import "./chunk-M3HR6BUY.js";
 import "./chunk-UMYYL5HY.js";
 import {
   NgTemplateOutlet

@@ -19,11 +19,11 @@ import {
   MatCommonModule,
   hasModifierKey
 } from "./chunk-CSRO5JI2.js";
-import "./chunk-M3HR6BUY.js";
 import {
   Platform,
   coerceNumberProperty
 } from "./chunk-IZB2KLNJ.js";
+import "./chunk-M3HR6BUY.js";
 import {
   Directionality
 } from "./chunk-UMYYL5HY.js";

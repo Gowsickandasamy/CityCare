@@ -73,6 +73,10 @@ export class AuthService {
     }
   }
 
+  getUserInfo():Observable<User>{
+    return this.http.get<User>(`${this.apiUrl}/user-info/`)
+  }
+
   private clearSession(): void {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');

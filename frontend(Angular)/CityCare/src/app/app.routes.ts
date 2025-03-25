@@ -8,6 +8,7 @@ import { AddOfficerComponent } from './components/add-officer/add-officer.compon
 import { ListOfficerComponent } from './components/list-officer/list-officer.component';
 import { MapComponent } from './components-library/map/map.component';
 import { CreateComplaintComponent } from './components/create-complaint/create-complaint.component';
+import { ComplaintsComponent } from './components/complaints/complaints.component';
 
 export const routes: Routes = [
     {path:'register', component:RegisterComponent, canActivate: [authGuard] },
@@ -17,5 +18,6 @@ export const routes: Routes = [
     {path:'officersList',component:ListOfficerComponent,canActivate:[authOnlyGuard]},
     {path:'createComplaint',component:CreateComplaintComponent,canActivate:[authOnlyGuard]},
     {path:'map',component:MapComponent,canActivate:[authOnlyGuard]},
+    {path:'complaints',component:ComplaintsComponent, canActivate:[authOnlyGuard]},
     {path:'**', redirectTo:'login', pathMatch:'full'},
 ];
