@@ -6,7 +6,7 @@ class Complaint(models.Model):
     STATUS = [
         ('PENDING', 'Pending'),
         ('WORK_ON_PROGRESS', 'Work on progress'),
-        ('COMPLETED', 'Completed')
+        ('RESOLVED', 'Resolved')
     ]
     
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_complaints')

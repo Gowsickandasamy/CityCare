@@ -1,5 +1,5 @@
 from rest_framework import serializers
-
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from authentication_app.models import User
 
 class UserSerializers(serializers.ModelSerializer):
@@ -22,3 +22,15 @@ class UserSerializers(serializers.ModelSerializer):
 class LoginSerializer(serializers.Serializer):
     email=serializers.EmailField()
     password=serializers.CharField(write_only=True)
+    
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        # Add custom claims
+        token['role'] = user.role  # Assuming the user model has a 'role' field
+
+        return token
