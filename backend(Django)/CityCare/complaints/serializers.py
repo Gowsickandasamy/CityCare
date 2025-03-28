@@ -11,3 +11,8 @@ class ComplaintCreateSerializer(serializers.Serializer):
     area_name = serializers.CharField(max_length=255)
     location_link = serializers.URLField()
     
+class ComplaintEditSerializer(serializers.Serializer):
+    title = serializers.CharField(max_length=255)
+    description = serializers.CharField()
+    area_name = serializers.CharField(max_length=255)
+    location_link = serializers.URLField()
