@@ -19,5 +19,6 @@ export const routes: Routes = [
     {path:'createComplaint',component:CreateComplaintComponent,canActivate:[authOnlyGuard]},
     {path:'map',component:MapComponent,canActivate:[authOnlyGuard]},
     {path:'complaints',component:ComplaintsComponent, canActivate:[authOnlyGuard]},
+    { path: 'edit-complaint/:id', component: CreateComplaintComponent, canActivate: [authOnlyGuard] },
     {path:'**', redirectTo:'login', pathMatch:'full'},
 ];

@@ -135,21 +135,21 @@ h1 {
   }
   
 
-.location-icon {
+.icon {
   text-decoration: none;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.location-icon mat-icon {
+.icon mat-icon {
     font-size: 24px; /* Adjust icon size */
     cursor: pointer;
     color: #1976d2; /* Default color */
     transition: transform 0.2s ease-in-out;
   }
   
-  .location-icon mat-icon:hover {
+  .icon mat-icon:hover {
     transform: scale(1.2);
     color: #e91e63;
   }

@@ -1,26 +1,23 @@
 <section class="create-complaint">
-   <h1 class="title">Create Complaint</h1>
+   <h1 class="title">{{title}}</h1>
    <form [formGroup]="complaintForm" class="complaint-form row" (ngSubmit)="onSubmit()">
-      <div class="form-field col-lg-6">
-         <input id="title" class="input-text js-input" type="text" formControlName="title" (input)="checkFilled($event)"
-            required>
+      <div class="form-field col-lg-6 input-group">
+         <input id="title" class="input-text js-input" type="text" formControlName="title" (input)="checkFilled($event)" required>
          <label class="label" for="title">Title</label>
       </div>
-      <div class="form-field col-lg-6 ">
-         <input id="area_name" class="input-text js-input" type="text" formControlName="area_name"
-            (input)="checkFilled($event)" required>
+      <div class="form-field col-lg-6 input-group">
+         <input id="area_name" class="input-text js-input" type="text" formControlName="area_name" (input)="checkFilled($event)" required>
          <label class="label" for="area_name">Area Name</label>
       </div>
       <div class="form-field col-lg-12 position-relative">
-         <input id="location" class="input-text js-input" type="text" formControlName="location_link" (input)="checkFilled($event)" required>
+         <input id="location" class="input-text js-input" type="text" formControlName="location_link" (input)="checkFilled($event)"  required>
          <label class="label" for="location">Location Link</label>
          <a href="#" class="button location-btn" (click)="openModal($event)">Hover me</a>
          <app-map *ngIf="isModalOpen" (close)="isModalOpen = false" (locationSelected)="receiveLocationLink($event)"></app-map>
-     </div>
+      </div>
      
       <div class="form-field col-lg-12">
-         <input id="description" class="input-text js-input" type="text" formControlName="description"
-            (input)="checkFilled($event)" required>
+         <input id="description" class="input-text js-input" type="text" formControlName="description" (input)="checkFilled($event)" required>
          <label class="label" for="description">Description</label>
       </div>
       <div class="form-field col-lg-12">

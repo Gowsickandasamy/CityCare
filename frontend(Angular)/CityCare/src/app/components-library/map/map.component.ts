@@ -54,7 +54,8 @@ export class MapComponent implements OnInit {
       .addTo(this.map);
   }
 
-  setLocation(): void {
+  setLocation(event: Event): void {
+    event.preventDefault();
     const lngLat = this.marker.getLngLat();
     const mapLink = `https://www.google.com/maps?q=${lngLat.lat},${lngLat.lng}`;
     this.locationSelected.emit(mapLink);

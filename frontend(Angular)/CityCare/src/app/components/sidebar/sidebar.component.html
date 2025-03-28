@@ -15,7 +15,7 @@
             </a>
           </mat-list-item>
           <mat-list-item>
-            <a class="menu-icons" routerLink="/addOfficer" routerLinkActive="active">
+            <a class="menu-icons" routerLink="/addOfficer" routerLinkActive="active" *ngIf="isAdmin()">
               <mat-icon>supervisor_account</mat-icon>
               <span>Add Officer</span>
             </a>
@@ -24,9 +24,9 @@
           <mat-divider></mat-divider>
   
           <mat-list-item>
-            <a class="menu-icons" routerLink="/createComplaint" routerLinkActive="active">
+            <a class="menu-icons" routerLink="/createComplaint" routerLinkActive="active" *ngIf="isUser()">
               <mat-icon>queue</mat-icon>
-              <span>Complaint</span>
+              <span>Create Complaint</span>
             </a>
           </mat-list-item>
         </div>

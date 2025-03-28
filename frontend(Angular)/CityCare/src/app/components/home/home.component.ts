@@ -11,6 +11,8 @@ import { MatCardModule } from '@angular/material/card';
 import { FooterComponent } from '../footer/footer.component';
 import { ButtonComponent } from '../../components-library/button/button.component';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { User } from '../../models/user';
+import { throwIfEmpty } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -32,7 +34,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 })
 export class HomeComponent implements OnInit, AfterViewInit{
 
-  user:any;
+  user!:User;
 
 
   constructor(private authService:AuthService, private router:Router, private el: ElementRef, private renderer: Renderer2){
@@ -40,7 +42,13 @@ export class HomeComponent implements OnInit, AfterViewInit{
   }
 
   ngOnInit(): void {
-    
+    this.authService.getUserInfo().subscribe({
+      next: (userData) => {
+        this.user = userData;
+        console.log(this.user.role);
+      },
+      error: (err) => console.error('Error fetching user info:', err)
+    });
   }
   
   

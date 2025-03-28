@@ -11,6 +11,9 @@ export class AuthService {
   private isLoggedInSubject = new BehaviorSubject<boolean>(this.hasValidTokens());
   isLoggedIn$ = this.isLoggedInSubject.asObservable();
 
+  private userRoleSubject = new BehaviorSubject<string | null>(null);
+  userRole$ = this.userRoleSubject.asObservable();
+
   constructor(private http: HttpClient) {}
 
   login(body: any): Observable<any> {
@@ -75,6 +78,17 @@ export class AuthService {
 
   getUserInfo():Observable<User>{
     return this.http.get<User>(`${this.apiUrl}/user-info/`)
+  }
+
+  private fetchUserRole(): void {
+    this.getUserInfo().subscribe({
+      next: (user) => {
+        this.userRoleSubject.next(user.role); // Assuming 'role' is a string in User model
+      },
+      error: () => {
+        this.userRoleSubject.next(null);
+      }
+    });
   }
 
   private clearSession(): void {

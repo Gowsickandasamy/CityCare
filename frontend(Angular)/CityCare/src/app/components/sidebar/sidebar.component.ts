@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { FooterComponent } from '../footer/footer.component';
 import { HomeComponent } from '../home/home.component';
+import { User } from '../../models/user';
 
 @Component({
   selector: 'app-sidebar',
@@ -18,12 +19,21 @@ import { HomeComponent } from '../home/home.component';
 })
 export class SidebarComponent implements OnInit {
   isLoggedIn$!: Observable<boolean>;
-
+  userRole!: string | null;
+  user!:User;
   private authService = inject(AuthService);
   private router = inject(Router);
   
   ngOnInit(): void {
     this.isLoggedIn$ = this.authService.isLoggedIn$;
+    this.authService.getUserInfo().subscribe(
+      (res)=>{
+        this.user = res
+      },
+      (err)=>{
+        console.log("Something went wrong")
+      })
+    
   }
 
   onLogout(): void {
@@ -31,5 +41,13 @@ export class SidebarComponent implements OnInit {
       next: () => this.router.navigate(['/login']),
       error: (err) => console.error('Logout Failed:', err)
     });
+  }
+
+  isAdmin(): boolean {
+    return this.user?.role === 'ADMIN';
+  }
+
+  isUser():boolean{
+    return this.user?.role === 'USER';
   }
 }

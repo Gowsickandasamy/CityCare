@@ -6,10 +6,12 @@ import { User } from '../../models/user';
 import { CommonModule } from '@angular/common';
 import {MatIconModule} from '@angular/material/icon'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
+import { StatusModalComponent } from '../../components-library/status-modal/status-modal.component';
 
 @Component({
   selector: 'app-complaints',
-  imports: [CommonModule, MatIconModule, FormsModule],
+  imports: [CommonModule, MatIconModule, FormsModule, RouterLink, StatusModalComponent],
   templateUrl: './complaints.component.html',
   styleUrl: './complaints.component.css'
 })
@@ -18,8 +20,9 @@ export class ComplaintsComponent implements OnInit{
   userRole: string = '';
   userName: string = '';
   searchText: string = ''
-
   selectedStatus: string = 'All Complaints';
+  showModal: boolean = false;
+  selectedComplaint: Complaint | null = null;
 
   constructor(private complaintService:ComplaintService, private authService: AuthService){}
 
@@ -45,10 +48,48 @@ export class ComplaintsComponent implements OnInit{
     });
   }
 
+  openStatusModal(complaint: Complaint) {
+    this.selectedComplaint = complaint;
+    this.showModal = true;
+  }
+
+  closeStatusModal() {
+    this.showModal = false;
+    this.selectedComplaint = null;
+  }
+
+  updateComplaintStatus(newStatus: any) {
+    if (!this.selectedComplaint) {
+      console.error('Error: No complaint selected.');
+      return;
+    }
+  
+    if (this.selectedComplaint.id === undefined) {
+      console.error('Error: Complaint ID is missing.');
+      return;
+    }
+  
+    const updatedComplaint = {
+      id: this.selectedComplaint.id,  // Ensure ID is included
+      status: newStatus
+    };
+  
+    this.complaintService.change_status(updatedComplaint).subscribe({
+      next: () => {
+        if (this.selectedComplaint) {  // Ensure it's not null before updating
+          this.selectedComplaint.status = newStatus;
+        }
+        this.loadComplaints();
+        this.closeStatusModal();
+      },
+      error: (err) => console.error('Error updating status:', err)
+    });
+  }
+  
+  
 
   get filteredComplaints() {
     return this.complaints.filter(complaint => {
-      // Filter by status
       const statusMatch = this.selectedStatus === 'All Complaints' || complaint.status === this.selectedStatus;
 
       const officerMatch = this.searchText.trim() === '' || 
@@ -62,4 +103,6 @@ export class ComplaintsComponent implements OnInit{
   setStatus(status: string) {
     this.selectedStatus = status;
   }
+
+  
 }
