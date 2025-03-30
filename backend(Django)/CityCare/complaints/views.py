@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import ComplaintCreateSerializer, ComplaintEditSerializer, ComplaintSerializer
-from .services import change_status, create_complaint, edit_complaint, get_complaint, get_complaints
+from .services import change_status, create_complaint, delete_complaint, edit_complaint, get_complaint, get_complaints
 
 # Create your views here.
 class ComplaintCreateView(APIView):
@@ -35,7 +35,6 @@ class ComplaintListView(APIView):
     def get(self, request):
         user = request.user
 
-        # Check user's role
         if user.role == 'ADMIN':
             complaints = get_complaints(admin_id=user.id)
         elif user.role == 'OFFICER':
@@ -55,6 +54,8 @@ class ComplaintView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self,request,id):
         result = get_complaint(id)
+        if "error" in result:
+            return Response(result, status=status.HTTP_404_NOT_FOUND)
         return Response(result, status=status.HTTP_200_OK)
     
 class ComplaintEditView(APIView):
@@ -85,10 +86,10 @@ class ComplaintStatusView(APIView):
     permission_classes = [IsAuthenticated]
 
     def put(self, request, id):
-        status_value = request.data.get("status")  # ✅ Extract status from request body
+        status_value = request.data.get("status")
 
         if not status_value:
-            return Response({"error": "Status field is required"}, status=status.HTTP_400_BAD_REQUEST)  # ✅ Validation
+            return Response({"error": "Status field is required"}, status=status.HTTP_400_BAD_REQUEST)
         
         result = change_status(id, status_value)
 
@@ -96,3 +97,14 @@ class ComplaintStatusView(APIView):
             return Response({"error": result["error"]}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({"message": "Complaint status updated successfully."}, status=status.HTTP_200_OK)
+
+class ComplaintDeleteView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def delete(self,request,id):
+        result = delete_complaint(id)
+        
+        if "error" in result:
+            return Response({"error": result["error"]}, status=status.HTTP_400_BAD_REQUEST)
+        
+        return Response({"message": "Complaint was deleted successfully."}, status=status.HTTP_200_OK)

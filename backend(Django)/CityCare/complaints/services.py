@@ -125,3 +125,13 @@ def change_status(id, status):
         complaint.status = status
         complaint.save()
         return {'Success':'Status was changed'}
+    
+def delete_complaint(id):
+    with transaction.atomic():
+        complaint = Complaint.objects.filter(id=id).first()
+        
+        if(complaint is None):
+            return {"error": f"No Complaint found with id '{id}'"}
+        
+        complaint.delete()
+        return {'Success':'Complaint was changed'}
