@@ -2,7 +2,6 @@
   <div class="title">
     <h1>Complaints</h1>
     <div class="title-right">
-      <!-- Dropdown for Filtering Complaints -->
       <div class="dropdown">
         <button
           class="btn btn-secondary dropdown-toggle"
@@ -14,24 +13,10 @@
           {{ selectedStatus }}
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-          <li>
-            <a class="dropdown-item" (click)="setStatus('All Complaints')"
-              >All Complaints</a
-            >
-          </li>
-          <li>
-            <a class="dropdown-item" (click)="setStatus('PENDING')">Pending</a>
-          </li>
-          <li>
-            <a class="dropdown-item" (click)="setStatus('WORK_ON_PROGRESS')"
-              >Work on progress</a
-            >
-          </li>
-          <li>
-            <a class="dropdown-item" (click)="setStatus('RESOLVED')"
-              >Resolved</a
-            >
-          </li>
+          <li><a class="dropdown-item" (click)="setStatus('All Complaints')">All Complaints</a></li>
+          <li><a class="dropdown-item" (click)="setStatus('PENDING')">Pending</a></li>
+          <li><a class="dropdown-item" (click)="setStatus('WORK_ON_PROGRESS')">Work on progress</a></li>
+          <li><a class="dropdown-item" (click)="setStatus('RESOLVED')">Resolved</a></li>
         </ul>
       </div>
 
@@ -50,55 +35,64 @@
   </div>
   <hr />
 
-  <div class="complaints-container">
-    <div *ngIf="filteredComplaints.length === 0">
-      <p>
-        No complaints found for "{{ selectedStatus }}" status with officer name
-        "{{ searchText }}".
-      </p>
-    </div>
-    <div class="complaints">
-      <div *ngFor="let complaint of filteredComplaints" class="complaint-card">
-        <h3>{{ complaint.title }}</h3>
-        <p><strong>Description:</strong> {{ complaint.description }}</p>
-        <p><strong>Area Name:</strong> {{ complaint.area_name }}</p>
-        <p><strong>Officer Name:</strong> {{ complaint.officer }}</p>
-        <p>
-          <strong>Status:</strong>
-          <span
-            [ngClass]="{
-              'text-warning': complaint.status === 'PENDING',
-              'text-primary': complaint.status === 'WORK_ON_PROGRESS',
-              'text-success': complaint.status === 'RESOLVED'
-            }"
-            >{{ complaint.status }}</span
-          >
-        </p>
-
-        <div class="complaint-footer">
-          <a [href]="complaint.location_link" target="_blank" class="icon">
-            <mat-icon color="primary">place</mat-icon>
-          </a>
-          <a
-            [routerLink]="['/edit-complaint', complaint.id]"
-            class="icon"
-            *ngIf="userRole == 'USER'"
-          >
-            <mat-icon>edit</mat-icon>
-          </a>
-          <a (click)="openStatusModal(complaint)" class="icon">
-            <mat-icon>sync</mat-icon>
-          </a>
-        </div>
-      </div>
-    </div>
+  <div *ngIf="filteredComplaints.length === 0">
+    <p>No complaints found for "{{ selectedStatus }}" status with officer name "{{ searchText }}".</p>
   </div>
-  <app-status-modal
-  *ngIf="showModal"
-  [showModal]="showModal"
-  [complaint]="selectedComplaint"
-  (closeModal)="closeStatusModal()"
-  (statusUpdated)="updateComplaintStatus($event)">
-</app-status-modal>
 
+  <div *ngIf="filteredComplaints.length > 0" class="table-responsive">
+    <table class="table table-bordered">
+      <thead class="table-dark">
+        <tr>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Area Name</th>
+          <th>Officer Name</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let complaint of filteredComplaints">
+          <td>
+            <span
+              class="status-badge"
+              [ngClass]="{
+                'badge-warning': complaint.status === 'PENDING',
+                'badge-primary': complaint.status === 'WORK_ON_PROGRESS',
+                'badge-success': complaint.status === 'RESOLVED'
+              }"      
+              data-bs-toggle="tooltip"
+              data-bs-placement="left"
+              [attr.title]="complaint.status"
+            ></span>
+            {{ complaint.title }}
+          </td>
+          <td>{{ complaint.description }}</td>
+          <td>{{ complaint.area_name }}</td>
+          <td>{{ complaint.officer }}</td>
+          <td>
+            <a [href]="complaint.location_link" target="_blank" class="icon">
+              <mat-icon color="primary">place</mat-icon>
+            </a>
+            <a [routerLink]="['/edit-complaint', complaint.id]" class="icon" *ngIf="userRole == 'USER'">
+              <mat-icon>edit</mat-icon>
+            </a>
+            <a (click)="openStatusModal(complaint)" class="icon" *ngIf="userRole == 'OFFICER'">
+              <mat-icon>sync</mat-icon>
+            </a>
+            <a (click)="deleteComplaint(complaint.id)" class="icon" *ngIf="userRole == 'USER'">
+              <mat-icon>delete</mat-icon></a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+
+  <app-status-modal
+    *ngIf="showModal"
+    [showModal]="showModal"
+    [complaint]="selectedComplaint"
+    (closeModal)="closeStatusModal()"
+    (statusUpdated)="updateComplaintStatus($event)">
+  </app-status-modal>
 </div>

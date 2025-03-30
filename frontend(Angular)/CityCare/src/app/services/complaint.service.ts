@@ -32,4 +32,8 @@ export class ComplaintService {
   change_status(body: { id: number; status: string }): Observable<any> {
     return this.http.put(`${this.apiUrl}/${body.id}/status/`, { status: body.status });
   }
+
+  delete_complaint(id:number):Observable<any>{
+    return this.http.delete(`${this.apiUrl}/${id}/delete/`)
+  }
 }

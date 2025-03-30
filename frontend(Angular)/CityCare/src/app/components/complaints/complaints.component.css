@@ -2,7 +2,9 @@
 .complaints-container {
   min-height: 100vh;
   position: relative;
-  padding-left: 5%;
+  max-width: 90%; /* Adjust width as needed */
+  margin: 0 auto; /* Centers the container */
+  padding-left: 0; /* Remove previous left padding */
 }
 
 .title {
@@ -87,70 +89,46 @@ h1 {
   transition: all 500ms cubic-bezier(0, 0.11, 0.35, 2);
 }
 
-.complaints {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 100px;
-  justify-content: flex-start; /* Align cards from the left */
-  padding: 20px;
+.status-badge {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 8px;
 }
 
-.complaint-card {
-    display: flex;
-    flex-direction: column;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    width: 300px;
-    min-height: 250px; /* Ensure consistent height */
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    position: relative; /* Needed for absolute positioning */
-  }
-  
-
-.complaint-card:hover {
-  transform: translateY(-5px); /* Elevate effect */
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Stronger shadow */
+.badge-warning {
+  background-color: #ffc107; /* Yellow for Pending */
 }
 
-.complaint-card h3 {
-  margin-bottom: 10px;
-  font-size: 1.5rem;
+.badge-primary {
+  background-color: #007bff; /* Blue for Work in Progress */
 }
 
-.complaint-card p {
-  margin-bottom: 8px;
-  font-size: 1rem;
+.badge-success {
+  background-color: #28a745; /* Green for Resolved */
 }
-
-.complaint-footer {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start; /* Align to the left */
-    padding-top: 10px;
-    position: absolute;
-    bottom: 10px; /* Ensures visibility */
-    left: 10px; /* Align to the left */
-  }
-  
 
 .icon {
   text-decoration: none;
   display: flex;
   align-items: center;
   justify-content: center;
+  display: inline-flex; /* Keeps icons in line and centered */
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
 }
 
 .icon mat-icon {
-    font-size: 24px; /* Adjust icon size */
-    cursor: pointer;
-    color: #1976d2; /* Default color */
-    transition: transform 0.2s ease-in-out;
-  }
-  
-  .icon mat-icon:hover {
-    transform: scale(1.2);
-    color: #e91e63;
-  }
-  
+  font-size: 24px;
+  cursor: pointer;
+  color: #1976d2;
+  transition: transform 0.2s ease-in-out;
+}
+
+.icon mat-icon:hover {
+  transform: scale(1.2);
+  color: #e91e63;
+}
+

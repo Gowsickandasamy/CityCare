@@ -2,6 +2,11 @@ body {
     background: #ededed;
 }
 
+h1 {
+    font-size: 70px;
+    margin: 0;
+  }
+  
 .table_outer {
     padding: 20px 0;
 }

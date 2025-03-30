@@ -2,7 +2,7 @@ import {
   Platform,
   coerceElement,
   coerceNumberProperty
-} from "./chunk-2LO22RI7.js";
+} from "./chunk-IZB2KLNJ.js";
 import {
   BidiModule
 } from "./chunk-UMYYL5HY.js";
@@ -3190,19 +3190,15 @@ export {
   A,
   _getFocusedElementPierceShadowDom,
   _getEventTarget,
-  _bindEventWithOptions,
   normalizePassiveListenerOptions,
   FocusMonitor,
   _CdkPrivateStyleLoader,
-  coerceArray,
   CdkObserveContent,
   ObserversModule,
   InteractivityChecker,
   FocusTrapFactory,
-  A11yModule,
-  _IdGenerator,
   hasModifierKey,
   FocusKeyManager,
   MatCommonModule
 };
-//# sourceMappingURL=chunk-QYSRKVPK.js.map
+//# sourceMappingURL=chunk-CSRO5JI2.js.map
