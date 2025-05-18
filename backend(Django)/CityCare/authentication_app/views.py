@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
-from authentication_app.serializers import LoginSerializer, UserSerializers
+from authentication_app.serializers import ChangePasswordSerializer, LoginSerializer, UserSerializers
 from rest_framework.decorators import api_view,permission_classes
 from rest_framework.permissions import IsAuthenticated
 
@@ -22,12 +22,6 @@ def register_user(request):
 def hello_world(request):
     return Response({"message": "Hello, World!"})
 
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def GetUserInfo(request):
-    user = request.user
-    user_serializer= UserSerializers(user)
-    return Response(user_serializer.data)
 
 class LoginView(APIView):
     def post(self,request):
@@ -66,3 +60,21 @@ class LogoutView(APIView):
             return Response({"message":"Successfully Logged Out"}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+class UserProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self,request):
+        rawUser = request.user
+        userSerializer = UserSerializers(rawUser)
+        return Response(userSerializer.data)
+    
+class ChangePasswordView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializer = ChangePasswordSerializer(data=request.data, context={'request': request})
+        if serializer.is_valid():
+            request.user.set_password(serializer.validated_data['new_password'])
+            request.user.save()
+            return Response({"message": "Password changed successfully."}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -1,9 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from officers.serializers import OfficerCreateSerializer, OfficerSerializer
-from officers.services import create_officer, get_all_officer, delete_officer
+from complaints.models import Complaint
+from officers.models import Officer
+from officers.serializers import OfficerCreateSerializer, OfficerRatingSerializer, OfficerSerializer
+from officers.services import create_officer, create_review, get_all_officer, delete_officer
 from rest_framework.views import APIView
 
 # Create your views here.
@@ -48,3 +50,22 @@ class OfficerDeleteView(APIView):
         
         delete_officer(id)
         return Response({"message":"Officer deleted Successfully"}, status=status.HTTP_200_OK)
+    
+class OfficerReviewCreateView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, id):
+        complaint = get_object_or_404(Complaint, id=id)
+        officer_user = complaint.officer
+        officer = Officer.objects.get(user=officer_user)
+
+        if not officer:
+            return Response({"error": "Complaint is not assigned to any officer."}, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = OfficerRatingSerializer(data=request.data, context={'request': request, 'complaint': complaint})
+
+        if serializer.is_valid():
+            review = serializer.save()
+            return Response({"message": "Review submitted successfully", "review": OfficerRatingSerializer(review).data}, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

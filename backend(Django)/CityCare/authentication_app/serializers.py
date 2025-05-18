@@ -30,7 +30,23 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
 
-        # Add custom claims
-        token['role'] = user.role  # Assuming the user model has a 'role' field
+        token['role'] = user.role
 
         return token
+    
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required = True)
+    confirm_password = serializers.CharField(required=True)
+    
+    def validate_old_password(self,value):
+        user=self.context['request'].user
+        if not user.check_password(value):
+            raise serializers.ValidationError("Old Password is wrong")
+        return value
+    
+    def validate(self,data):
+        if data['new_password'] != data['confirm_password']:
+            raise serializers.ValidationError({"confirm_password": "New password and confirm password do not match."})
+        return data
+    

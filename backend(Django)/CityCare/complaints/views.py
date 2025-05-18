@@ -4,7 +4,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import ComplaintCreateSerializer, ComplaintEditSerializer, ComplaintSerializer
-from .services import change_status, create_complaint, delete_complaint, edit_complaint, get_complaint, get_complaints
+from .services import change_status, create_complaint, current_complaints, delete_complaint, detail_complaint, edit_complaint, get_complaint, get_complaints, resolved_complaints
+from .models import Complaint
 
 # Create your views here.
 class ComplaintCreateView(APIView):
@@ -108,3 +109,71 @@ class ComplaintDeleteView(APIView):
             return Response({"error": result["error"]}, status=status.HTTP_400_BAD_REQUEST)
         
         return Response({"message": "Complaint was deleted successfully."}, status=status.HTTP_200_OK)
+    
+class CurrentComplaintView(APIView):
+    permission_classes=[IsAuthenticated]
+    
+    def get(self, request):
+        user = request.user
+
+        if user.role == 'ADMIN':
+            complaints = current_complaints(admin_id=user.id)
+        elif user.role == 'OFFICER':
+            complaints = current_complaints(officer_id=user.id)
+        elif user.role == 'USER':
+            complaints = current_complaints(user_id=user.id)
+        else:
+            return Response({"error": "Invalid user role"}, status=status.HTTP_403_FORBIDDEN)
+
+        if complaints == "No Complaints":
+            return Response({"message": "No Complaints found"}, status=status.HTTP_200_OK)
+       
+        return Response(complaints, status=status.HTTP_200_OK)
+        
+        
+class ResolvedComplaintView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        user = request.user
+
+        if user.role == 'ADMIN':
+            complaints = resolved_complaints(admin_id=user.id)
+        elif user.role == 'OFFICER':
+            complaints = resolved_complaints(officer_id=user.id)
+        elif user.role == 'USER':
+            complaints = resolved_complaints(user_id=user.id)
+        else:
+            return Response({"error": "Invalid user role"}, status=status.HTTP_403_FORBIDDEN)
+
+        if complaints == "No Complaints":
+            return Response({"message": "No Complaints found"}, status=status.HTTP_200_OK)
+       
+        return Response(complaints, status=status.HTTP_200_OK)
+    
+
+class ComplaintDetailView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, id):
+        result = detail_complaint(id)
+
+        if "error" in result:
+            return Response(result, status=status.HTTP_404_NOT_FOUND)
+
+        return Response(result, status=status.HTTP_200_OK)
+    
+class ComplaintStatsView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self,request):        
+        complaints = Complaint.objects.all()
+        
+        total = complaints.count()
+        resolved = complaints.filter(status = "RESOLVED").count()
+        pending = complaints.filter(status = "PENDING").count()
+        
+        return Response({
+            "total": total,
+            "resolved": resolved,
+            "pending": pending
+        })

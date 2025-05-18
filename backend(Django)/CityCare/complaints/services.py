@@ -1,7 +1,10 @@
 from django.db import transaction
+
+from officers.serializers import OfficerRatingSerializer
 from .models import Complaint
-from officers.models import Officer
+from officers.models import Officer, OfficerRating
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 
 def create_complaint(user, title, description, area_name, location_link):
     with transaction.atomic():
@@ -115,6 +118,73 @@ def edit_complaint(id,user, title, description, area_name, location_link):
         return {"complaint": complaint}
     
 
+def current_complaints(admin_id=None, officer_id=None, user_id=None):
+    with transaction.atomic():
+        complaints = Complaint.objects.exclude(status="RESOLVED")  # ✅ Fix: Use exclude() instead of !=
+
+        if admin_id:
+            complaints = complaints.filter(admin_id=admin_id)
+        elif officer_id:
+            complaints = complaints.filter(officer_id=officer_id)
+        elif user_id:
+            complaints = complaints.filter(user_id=user_id)
+        else:
+            return "No Complaints"
+
+        if not complaints.exists():
+            return "No Complaints"
+
+        return [
+            {
+                "id": complaint.id,
+                "user": complaint.user.username if complaint.user else None,
+                "officer": complaint.officer.username if complaint.officer else None,
+                "admin": complaint.admin.username if complaint.admin else None,
+                "title": complaint.title,
+                "description": complaint.description,
+                "area_name": complaint.area_name,
+                "location_link": complaint.location_link,
+                "created_at": complaint.created_at,
+                "status": complaint.status
+            }
+            for complaint in complaints
+        ]
+        
+
+def resolved_complaints(admin_id=None, officer_id=None, user_id=None):
+    with transaction.atomic():
+        query = Q(status="RESOLVED")
+        
+        if admin_id:
+            query &= Q(admin_id=admin_id)
+        elif officer_id:
+            query &= Q(officer_id=officer_id)
+        elif user_id:
+            query &= Q(user_id=user_id)
+        else:
+            return "No Complaints"
+
+        complaints = Complaint.objects.filter(query).select_related('user', 'officer', 'admin')
+
+        if not complaints.exists():
+            return "No Complaints"
+
+        return [
+            {
+                "id": complaint.id,
+                "user": complaint.user.username if complaint.user else None,
+                "officer": complaint.officer.username if complaint.officer else None,
+                "admin": complaint.admin.username if complaint.admin else None,
+                "title": complaint.title,
+                "description": complaint.description,
+                "area_name": complaint.area_name,
+                "location_link": complaint.location_link,
+                "created_at": complaint.created_at,
+                "status": complaint.status
+            }
+            for complaint in complaints
+        ]
+    
 def change_status(id, status):
     with transaction.atomic():
         complaint = Complaint.objects.filter(id=id).first()
@@ -135,3 +205,30 @@ def delete_complaint(id):
         
         complaint.delete()
         return {'Success':'Complaint was changed'}
+
+
+def detail_complaint(id):
+    with transaction.atomic():
+        complaint = Complaint.objects.filter(id=id).select_related('user', 'officer', 'admin').first()
+        
+        if complaint is None:
+            return {"error": f"No Complaint found with id '{id}'"}
+
+        officer_ratings = OfficerRating.objects.filter(complaint=complaint)
+        ratings_data = OfficerRatingSerializer(officer_ratings, many=True).data
+
+        return {
+            "complaint": {
+                "id": complaint.id,
+                "user": complaint.user.username if complaint.user else None,
+                "officer": complaint.officer.username if complaint.officer else None,
+                "admin": complaint.admin.username if complaint.admin else None,
+                "title": complaint.title,
+                "description": complaint.description,
+                "area_name": complaint.area_name,
+                "location_link": complaint.location_link,
+                "created_at": complaint.created_at,
+                "status": complaint.status,
+                "officer_ratings": ratings_data
+            }
+        }

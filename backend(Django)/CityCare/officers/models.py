@@ -14,6 +14,7 @@ class Officer(models.Model):
     
 class OfficerRating(models.Model):
     officer = models.ForeignKey(Officer, on_delete=models.CASCADE, related_name='ratings')
+    complaint = models.ForeignKey('complaints.Complaint', on_delete=models.CASCADE, unique=True)
     rating = models.PositiveIntegerField()
     comment = models.TextField(null=True, blank=True)
     rated_by = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -23,12 +24,10 @@ class OfficerRating(models.Model):
         return f"Rating for {self.officer.user.username} - {self.rating}"
     
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)  # Save the rating first
+        super().save(*args, **kwargs)
         
-        # Recalculate the average rating for the officer
         ratings = OfficerRating.objects.filter(officer=self.officer)
         average = sum(r.rating for r in ratings) / ratings.count() if ratings.exists() else 0.0
         
-        # Update the officer's average rating
         self.officer.average_rating = average
         self.officer.save()
