@@ -1,0 +1,26 @@
+<div class="profile-container">
+  <!-- Circular Profile Logo -->
+  <div class="profile-logo">
+    <span>{{ user.fullName[0] }}</span>
+  </div>
+
+  <!-- User Details -->
+  <div class="user-info">
+    <h2>{{ user.fullName }}</h2>
+    <p><strong>Username:</strong> {{ user.fullName }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    <p><strong>Phone:</strong> {{ user.phone }}</p>
+    <p><strong>Role:</strong> {{ user.role }}</p>
+    <button (click)="editProfile()">Edit Profile</button>
+  </div>
+
+  <!-- Complaint Stats -->
+  <div class="stats-section">
+    <h3>Your Complaints</h3>
+    <div class="stats-cards">
+      <div class="stat-card total">Total: {{ totalCount }}</div>
+      <div class="stat-card resolved">Resolved: {{ resolvedCount }}</div>
+      <div class="stat-card pending">Pending: {{ pendingCount}}</div>
+    </div>
+  </div>
+</div>

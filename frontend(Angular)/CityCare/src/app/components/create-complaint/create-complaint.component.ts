@@ -44,7 +44,7 @@ export class CreateComplaintComponent implements OnInit {
     });
     this.route.paramMap.subscribe((params) => {
       this.complaintId = params.get('id');
-      this.isEditMode = !!this.complaintId; // Convert to boolean
+      this.isEditMode = !!this.complaintId;
   
       if (this.isEditMode) {
         this.loadComplaint();
@@ -66,7 +66,7 @@ export class CreateComplaintComponent implements OnInit {
           this.checkFilled();
         } else {
           this.toastr.error('Complaint not found');
-          this.router.navigate(['/complaints']);
+          this.router.navigate(['/current-complaints']);
         }
       },
       (err) => {
@@ -93,7 +93,7 @@ export class CreateComplaintComponent implements OnInit {
       (res) => {
         this.toastr.success('Complaint was raised');
         this.complaintForm.reset();
-        this.router.navigate(['/complaints']);
+        this.router.navigate(['/current-complaints']);
       },
       (err) => {
         this.toastr.error('Something went wrong');
@@ -106,7 +106,7 @@ export class CreateComplaintComponent implements OnInit {
     this.complaintService.edit_complaint(updatedData).subscribe(
       (res) => {
         this.toastr.success('Complaint updated successfully');
-        this.router.navigate(['/complaints']);
+        this.router.navigate(['/current-complaints']);
       },
       (err) => {
         this.toastr.error('Failed to update complaint');

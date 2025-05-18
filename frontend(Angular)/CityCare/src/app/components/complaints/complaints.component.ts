@@ -9,6 +9,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { StatusModalComponent } from '../../components-library/status-modal/status-modal.component';
 import { ToastrService } from 'ngx-toastr';
+import { ComplaintModalComponent } from '../../components-library/complaint-modal/complaint-modal.component';
+import { DetailComplaintModalComponent } from '../../components-library/detail-complaint-modal/detail-complaint-modal.component';
 declare var bootstrap: any;
 @Component({
   selector: 'app-complaints',
@@ -17,7 +19,8 @@ declare var bootstrap: any;
     MatIconModule,
     FormsModule,
     RouterLink,
-    StatusModalComponent,
+    ComplaintModalComponent,
+    DetailComplaintModalComponent,
   ],
   templateUrl: './complaints.component.html',
   styleUrl: './complaints.component.css',
@@ -30,6 +33,9 @@ export class ComplaintsComponent implements OnInit, AfterViewInit {
   selectedStatus: string = 'All Complaints';
   showModal: boolean = false;
   selectedComplaint: Complaint | null = null;
+  showDetailModal: boolean = false;
+  detailedComplaint: any;
+
   constructor(
     private complaintService: ComplaintService,
     private authService: AuthService,
@@ -71,41 +77,48 @@ export class ComplaintsComponent implements OnInit, AfterViewInit {
     });
   }
 
-  openStatusModal(complaint: Complaint) {
+  openReviewModal(complaint: Complaint) {
     this.selectedComplaint = complaint;
     this.showModal = true;
   }
 
-  closeStatusModal() {
+  closeReviewModal() {
     this.showModal = false;
     this.selectedComplaint = null;
   }
 
-  updateComplaintStatus(newStatus: any) {
-    if (!this.selectedComplaint) {
-      console.error('Error: No complaint selected.');
-      return;
-    }
+  openDetailModal(complaint: Complaint) {
+    this.selectedComplaint = complaint;
+    this.showDetailModal = true;
+  }
 
-    if (this.selectedComplaint.id === undefined) {
+  closeDetailModal() {
+    this.showDetailModal = false;
+    this.selectedComplaint = null;
+  }
+
+  updateRating(review: { rating: number; comment: string }) {
+    if (!this.selectedComplaint || this.selectedComplaint.id === undefined) {
       console.error('Error: Complaint ID is missing.');
       return;
     }
 
     const updatedComplaint = {
       id: this.selectedComplaint.id,
-      status: newStatus,
+      rating: review.rating,
+      comment: review.comment,
     };
 
-    this.complaintService.change_status(updatedComplaint).subscribe({
+    this.complaintService.add_review(updatedComplaint).subscribe({
       next: () => {
-        if (this.selectedComplaint) {
-          this.selectedComplaint.status = newStatus;
-        }
         this.loadComplaints();
-        this.closeStatusModal();
+        this.closeReviewModal();
+        this.toastr.success('Review submitted successfully');
       },
-      error: (err) => console.error('Error updating status:', err),
+      error: (err) => {
+        this.toastr.error('Error updating review');
+        console.error('Error updating status:', err);
+      },
     });
   }
 
@@ -130,12 +143,14 @@ export class ComplaintsComponent implements OnInit, AfterViewInit {
   }
 
   deleteComplaint(id: number) {
-    const isConfirmed = window.confirm("Are you sure you want to delete this complaint?");
-    
+    const isConfirmed = window.confirm(
+      'Are you sure you want to delete this complaint?'
+    );
+
     if (isConfirmed) {
       this.complaintService.delete_complaint(id).subscribe(
         (res) => {
-          this.toastr.success("Complaint was deleted");
+          this.toastr.success('Complaint was deleted');
           this.loadComplaints();
         },
         (err) => {
@@ -144,5 +159,29 @@ export class ComplaintsComponent implements OnInit, AfterViewInit {
       );
     }
   }
-  
+
+  getDetailComplaint(complaint: any) {
+    this.selectedComplaint = complaint;
+
+    if (!complaint?.id) {
+      console.error('Error: Complaint ID is missing.');
+      return;
+    }
+
+    this.complaintService.get_detail_complaint(complaint.id).subscribe({
+      next: (data) => {
+        console.log('Fetched Complaint Detail:', data);
+        const ratingInfo = data.officer_ratings?.[0];
+        if (ratingInfo) {
+          console.log('Rating:', ratingInfo.rating);
+          console.log('Comment:', ratingInfo.comment);
+        }
+        this.selectedComplaint = data;
+        this.showDetailModal = true;
+      },
+      error: (err) => {
+        console.error('Error fetching complaint details:', err);
+      },
+    });
+  }
 }

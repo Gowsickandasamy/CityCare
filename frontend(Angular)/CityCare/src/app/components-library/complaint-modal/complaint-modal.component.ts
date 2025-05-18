@@ -1,65 +1,52 @@
-import { Component, Inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MapComponent } from '../map/map.component';
 
 @Component({
   selector: 'app-complaint-modal',
-  imports: [MapComponent,FormsModule, ReactiveFormsModule],
+  imports: [CommonModule,ReactiveFormsModule, FormsModule],
   templateUrl: './complaint-modal.component.html',
   styleUrl: './complaint-modal.component.css'
 })
-export class ComplaintModalComponent {
+export class ComplaintModalComponent implements OnInit{
 
-  complaintForm: FormGroup;
-  errorMessage!: '';
-  isModalOpen = false;
+  @Input() showModal: boolean = false;
+  @Input() complaint: any;
+  @Output() closeModal = new EventEmitter<void>();
+  @Output() review = new EventEmitter<{ rating: number; comment: string }>();
 
-  constructor(
-    private fb: FormBuilder,
-    public dialogRef: MatDialogRef<ComplaintModalComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) {
-    this.complaintForm = this.fb.group({
-      title: ['', Validators.required],
-      area_name: ['', Validators.required],
-      location_link: ['', Validators.required],
-      description: ['', Validators.required]
+  reviewForm!: FormGroup;
+  rating: number = 0;
+  starsArray: number[] = [1, 2, 3, 4, 5];
+  constructor(private fb: FormBuilder) {
+    this.reviewForm = this.fb.group({
+      rating: [null, Validators.required],
+      comment: ['', Validators.required]
     });
   }
 
-  onSubmit() {
-    if (this.complaintForm.valid) {
-      this.dialogRef.close(this.complaintForm.value);
+  ngOnInit() {
+  }
+
+  setRating(value: number): void {
+    this.rating = value;
+    this.reviewForm.controls['rating'].setValue(this.rating);
+  }
+
+  sendReview(){
+    if (this.reviewForm.invalid) {
+      console.error("Form is invalid");
+      return;
     }
+    const{ rating, comment } = this.reviewForm.value;
+
+    console.log("Updated Status:", rating, comment);
+
+    this.review.emit({ rating, comment });
+    this.closeModal.emit();
+  }
+  close() {
+    this.closeModal.emit();
   }
 
-  closeDialog() {
-    this.dialogRef.close();
-  }
-
-  receiveLocationLink(locationLink: string) {
-    this.complaintForm.patchValue({ location_link: locationLink });
-    this.isModalOpen = false;
-    const locationInput = document.getElementById('location');
-    if (locationInput) {
-      locationInput.classList.add('filled');
-    }
-  }
-
-
-  openModal(event: Event) {
-    event.preventDefault();
-    this.isModalOpen = true;
-  }
-
-  checkFilled(event: any) {
-    const input = event.target;
-    if (input.value) {
-      input.classList.add('filled');
-    } else {
-      input.classList.remove('filled');
-    }
-  }
 }
-

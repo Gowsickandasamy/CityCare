@@ -2,6 +2,7 @@
   <div class="title">
     <h1>Complaints</h1>
     <div class="title-right">
+      <!-- Dropdown for filtering complaints by status -->
       <div class="dropdown">
         <button
           class="btn btn-secondary dropdown-toggle"
@@ -15,11 +16,12 @@
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
           <li><a class="dropdown-item" (click)="setStatus('All Complaints')">All Complaints</a></li>
           <li><a class="dropdown-item" (click)="setStatus('PENDING')">Pending</a></li>
-          <li><a class="dropdown-item" (click)="setStatus('WORK_ON_PROGRESS')">Work on progress</a></li>
+          <li><a class="dropdown-item" (click)="setStatus('WORK_ON_PROGRESS')">Work in Progress</a></li>
           <li><a class="dropdown-item" (click)="setStatus('RESOLVED')">Resolved</a></li>
         </ul>
       </div>
 
+      <!-- Search Box -->
       <div class="search-box">
         <button class="btn-search">
           <mat-icon class="search-icon">search</mat-icon>
@@ -33,66 +35,81 @@
       </div>
     </div>
   </div>
+  
   <hr />
 
-  <div *ngIf="filteredComplaints.length === 0">
+  <!-- Message if no complaints found -->
+  <div *ngIf="filteredComplaints.length === 0" class="text-center">
     <p>No complaints found for "{{ selectedStatus }}" status with officer name "{{ searchText }}".</p>
   </div>
 
-  <div *ngIf="filteredComplaints.length > 0" class="table-responsive">
-    <table class="table table-bordered">
-      <thead class="table-dark">
-        <tr>
-          <th>Title</th>
-          <th>Description</th>
-          <th>Area Name</th>
-          <th>Officer Name</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let complaint of filteredComplaints">
-          <td>
-            <span
-              class="status-badge"
-              [ngClass]="{
-                'badge-warning': complaint.status === 'PENDING',
-                'badge-primary': complaint.status === 'WORK_ON_PROGRESS',
-                'badge-success': complaint.status === 'RESOLVED'
-              }"      
-              data-bs-toggle="tooltip"
-              data-bs-placement="left"
-              [attr.title]="complaint.status"
-            ></span>
-            {{ complaint.title }}
-          </td>
-          <td>{{ complaint.description }}</td>
-          <td>{{ complaint.area_name }}</td>
-          <td>{{ complaint.officer }}</td>
-          <td>
-            <a [href]="complaint.location_link" target="_blank" class="icon">
-              <mat-icon color="primary">place</mat-icon>
-            </a>
-            <a [routerLink]="['/edit-complaint', complaint.id]" class="icon" *ngIf="userRole == 'USER'">
-              <mat-icon>edit</mat-icon>
-            </a>
-            <a (click)="openStatusModal(complaint)" class="icon" *ngIf="userRole == 'OFFICER'">
-              <mat-icon>sync</mat-icon>
-            </a>
-            <a (click)="deleteComplaint(complaint.id)" class="icon" *ngIf="userRole == 'USER'">
-              <mat-icon>delete</mat-icon></a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  
+  <!-- Complaints Table -->
+  <div class="card border-0 shadow">
+    <div class="card-body">
+        <div *ngIf="filteredComplaints.length > 0" class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>Title</th>
+                  <th>Description</th>
+                  <th>Area Name</th>
+                  <th *ngIf="userRole === 'USER' || userRole === 'ADMIN'">Officer Name</th>
+                  <th *ngIf="userRole === 'OFFICER' || userRole === 'ADMIN'">Created By</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let complaint of filteredComplaints">
+                  <td>
+                    <span
+                      class="status-badge"
+                      [ngClass]="{
+                        'badge-warning': complaint.status === 'PENDING',
+                        'badge-primary': complaint.status === 'WORK_ON_PROGRESS',
+                        'badge-success': complaint.status === 'RESOLVED'
+                      }"      
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="left"
+                      [attr.title]="complaint.status"
+                    ></span>
+                    {{ complaint.title }}
+                  </td>
+                  <td>{{ complaint.description }}</td>
+                  <td>{{ complaint.area_name }}</td>
+                  <td *ngIf="userRole === 'USER' || userRole === 'ADMIN'">{{ complaint.officer }}</td>
+                  <td *ngIf="userRole === 'OFFICER' || userRole === 'ADMIN'">{{ complaint.user }}</td>
+                  <td>
+                    <a [href]="complaint.location_link" target="_blank" class="icon">
+                      <mat-icon color="primary">place</mat-icon>
+                    </a>
+                    <a href=""></a>
+                    <a (click)="openReviewModal(complaint)" class="icon" *ngIf="userRole == 'USER' && complaint.status=='RESOLVED'">
+                      <mat-icon>sync</mat-icon>
+                    </a>
+                    <a (click)="getDetailComplaint(complaint)" class="icon">
+                      <mat-icon>visibility</mat-icon>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+    </div>  
+ </div>
 
-  <app-status-modal
+  <!-- Status Modal -->
+  <app-complaint-modal
     *ngIf="showModal"
     [showModal]="showModal"
     [complaint]="selectedComplaint"
-    (closeModal)="closeStatusModal()"
-    (statusUpdated)="updateComplaintStatus($event)">
-  </app-status-modal>
+    (closeModal)="closeReviewModal()"
+    (review)="updateRating($event)">
+  </app-complaint-modal>
+
+  <app-detail-complaint-modal
+  *ngIf="showDetailModal"
+  [showModal]="showDetailModal"
+  [complaint]="selectedComplaint"
+  (closeModal)="closeDetailModal()">
+  </app-detail-complaint-modal>
 </div>

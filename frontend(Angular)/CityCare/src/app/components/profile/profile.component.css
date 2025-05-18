@@ -1,0 +1,65 @@
+.profile-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.profile-logo {
+  width: 100px;
+  height: 100px;
+  background-color: #4a90e2;
+  border-radius: 50%;
+  color: white;
+  font-size: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem auto;
+  font-weight: bold;
+}
+
+.user-info p {
+  margin: 0.5rem 0;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  margin-top: 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.stats-section {
+  margin-top: 2rem;
+}
+
+.stats-cards {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 1rem;
+}
+
+.stat-card {
+  padding: 1rem;
+  border-radius: 12px;
+  color: white;
+  width: 30%;
+  font-size: 1.2rem;
+}
+
+.total {
+  background-color: #5e72e4;
+}
+
+.resolved {
+  background-color: #2dce89;
+}
+
+.pending {
+  background-color: #f5365c;
+}

@@ -9,6 +9,8 @@ import { ListOfficerComponent } from './components/list-officer/list-officer.com
 import { MapComponent } from './components-library/map/map.component';
 import { CreateComplaintComponent } from './components/create-complaint/create-complaint.component';
 import { ComplaintsComponent } from './components/complaints/complaints.component';
+import { CurrentComplaintComponent } from './components/current-complaint/current-complaint.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
 export const routes: Routes = [
     {path:'register', component:RegisterComponent, canActivate: [authGuard] },
@@ -19,6 +21,8 @@ export const routes: Routes = [
     {path:'createComplaint',component:CreateComplaintComponent,canActivate:[authOnlyGuard]},
     {path:'map',component:MapComponent,canActivate:[authOnlyGuard]},
     {path:'complaints',component:ComplaintsComponent, canActivate:[authOnlyGuard]},
-    { path: 'edit-complaint/:id', component: CreateComplaintComponent, canActivate: [authOnlyGuard] },
+    {path:'current-complaints',component:CurrentComplaintComponent, canActivate:[authOnlyGuard]},
+    {path: 'edit-complaint/:id', component: CreateComplaintComponent, canActivate: [authOnlyGuard] },
+    {path:'profile',component:ProfileComponent, canActivate:[authOnlyGuard]},
     {path:'**', redirectTo:'login', pathMatch:'full'},
 ];

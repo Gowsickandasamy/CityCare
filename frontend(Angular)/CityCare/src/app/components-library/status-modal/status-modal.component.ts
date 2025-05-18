@@ -10,17 +10,17 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } 
 })
 export class StatusModalComponent implements OnInit {
   @Input() showModal: boolean = false;
-  @Input() complaint: any; // Ensure you are passing a valid complaint object
+  @Input() complaint: any;
   @Output() closeModal = new EventEmitter<void>();
   @Output() statusUpdated = new EventEmitter<string>();
 
-  statusForm!: FormGroup; // Ensure form is initialized
+  statusForm!: FormGroup;
 
   constructor(private fb: FormBuilder) {}
 
   ngOnInit() {
     this.statusForm = this.fb.group({
-      status: [this.complaint?.status || 'PENDING', Validators.required] // Default status
+      status: [this.complaint?.status || 'PENDING', Validators.required]
     });
   }
 
@@ -31,10 +31,10 @@ export class StatusModalComponent implements OnInit {
     }
 
     const updatedStatus = this.statusForm.value.status;
-    console.log("Updated Status:", updatedStatus); // Debugging log
+    console.log("Updated Status:", updatedStatus);
 
-    this.statusUpdated.emit(updatedStatus); // Emit status change
-    this.closeModal.emit(); // Close modal
+    this.statusUpdated.emit(updatedStatus);
+    this.closeModal.emit();
   }
 
   close() {

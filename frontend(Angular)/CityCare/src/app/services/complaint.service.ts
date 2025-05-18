@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Complaint } from '../models/complaint';
 
 @Injectable({
@@ -8,32 +8,52 @@ import { Complaint } from '../models/complaint';
 })
 export class ComplaintService {
 
-  private apiUrl = "http://127.0.0.1:8000/complaints"
+  private baseUrl = 'http://127.0.0.1:8000';
+  private complaintUrl = `${this.baseUrl}/complaints`;
+  private officerUrl = `${this.baseUrl}/officer`;
+
   constructor(private http:HttpClient) { }
 
   createComplaint(body:Partial<Complaint>):Observable<Complaint>{
     const{title,description, area_name, location_link} = body;
-    return this.http.post<Complaint>(`${this.apiUrl}/create/`, {title,description, area_name, location_link})
+    return this.http.post<Complaint>(`${this.complaintUrl}/create/`, {title,description, area_name, location_link})
   }
 
   get_complaint():Observable<Complaint[]>{
-    return this.http.get<Complaint[]>(`${this.apiUrl}/list/`)
+    return this.http.get<Complaint[]>(`${this.complaintUrl}/list/`)
   }
 
   get_complaintById(id:number):Observable<Complaint>{
-    return this.http.get<Complaint>(`${this.apiUrl}/${id}/`)
+    return this.http.get<Complaint>(`${this.complaintUrl}/${id}/`)
   }
 
   edit_complaint(body: Partial<Complaint>): Observable<Complaint> {
     const { id, title, description, area_name, location_link } = body;
-    return this.http.put<Complaint>(`${this.apiUrl}/${id}/edit/`, { title, description, area_name, location_link });
+    return this.http.put<Complaint>(`${this.complaintUrl}/${id}/edit/`, { title, description, area_name, location_link });
+  }
+
+  get_current_complaint():Observable<Complaint[]>{
+    return this.http.get<Complaint[]>(`${this.complaintUrl}/current-complaints/`)
   }
 
   change_status(body: { id: number; status: string }): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${body.id}/status/`, { status: body.status });
+    return this.http.put(`${this.complaintUrl}/${body.id}/status/`, { status: body.status });
   }
 
   delete_complaint(id:number):Observable<any>{
-    return this.http.delete(`${this.apiUrl}/${id}/delete/`)
+    return this.http.delete(`${this.complaintUrl}/${id}/delete/`)
   }
+
+  add_review(body: { id: number; rating: number; comment:string}):Observable<any>{
+    return this.http.post(`${this.officerUrl}/${body.id}/rating/`,{rating:body.rating, comment:body.comment})
+  }
+
+  get_detail_complaint(id:number):Observable<Complaint>{
+    return this.http.get<Complaint>(`${this.complaintUrl}/${id}/detail/`).pipe(map(res => res.complaint)) 
+  }
+
+  getComplaintStats():Observable<any>{
+    return this.http.get(`${this.complaintUrl}/stats/`)
+  }
+
 }

@@ -19,6 +19,21 @@ h1 {
   margin: 0;
 }
 
+.table_outer {
+  padding: 20px 0;
+}
+
+table td,
+table th {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.card {
+  border-radius: .5rem;
+}
+
 .dropdown .btn {
   min-width: 10px;
 }
